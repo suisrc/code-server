@@ -357,9 +357,13 @@ export async function readConfigFile(configPath?: string): Promise<Args> {
   }
 
   const configFile = await fs.readFile(configPath)
-  const config = yaml.safeLoad(configFile.toString(), {
+  let config = yaml.safeLoad(configFile.toString(), {
     filename: configPath,
   })
+
+  if (typeof config !== "object") {
+    config = {}
+  }
 
   // We convert the config file into a set of flags.
   // This is a temporary measure until we add a proper CLI library.
