@@ -84,26 +84,26 @@ jobs:
           name: release-packages
           path: ./release-packages
 
-  macos-amd64:
-    needs: release
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Download npm package
-        uses: actions/download-artifact@v2
-        with:
-          name: npm-package
-          path: ./release-npm-package
-      - run: ./ci/steps/release-packages.sh
-        env:
-          # Otherwise we get rate limited when fetching the ripgrep binary.
-          # For whatever reason only MacOS needs it.
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload release artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-packages
-          path: ./release-packages
+#  macos-amd64:
+#    needs: release
+#    runs-on: macos-latest
+#    steps:
+#      - uses: actions/checkout@v1
+#      - name: Download npm package
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: npm-package
+#          path: ./release-npm-package
+#      - run: ./ci/steps/release-packages.sh
+#        env:
+#          # Otherwise we get rate limited when fetching the ripgrep binary.
+#          # For whatever reason only MacOS needs it.
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Upload release artifacts
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: release-packages
+#          path: ./release-packages
 
 #  docker-amd64:
 #    runs-on: ubuntu-latest
