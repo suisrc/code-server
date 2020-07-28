@@ -50,4 +50,4 @@ ENV GO111MODULE=on
 RUN go get mvdan.cc/sh/v3/cmd/shfmt
 RUN go get github.com/goreleaser/nfpm/cmd/nfpm
 
-RUN curl -fsSL https://get.docker.com | sh
+# RUN curl -fsSL https://get.docker.com | sh
