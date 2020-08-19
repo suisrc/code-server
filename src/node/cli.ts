@@ -125,7 +125,11 @@ const options: Options<Required<Args>> = {
   "extra-builtin-extensions-dir": { type: "string[]", path: true },
   "list-extensions": { type: "boolean", description: "List installed VS Code extensions." },
   force: { type: "boolean", description: "Avoid prompts when installing VS Code extensions." },
-  "install-extension": { type: "string[]", description: "Install or update a VS Code extension by id or vsix." },
+  "install-extension": {
+    type: "string[]",
+    description:
+      "Install or update a VS Code extension by id or vsix. The identifier of an extension is `${publisher}.${name}`. To install a specific version provide `@${version}`. For example: 'vscode.csharp@1.2.3'.",
+  },
   "uninstall-extension": { type: "string[]", description: "Uninstall a VS Code extension by id." },
   "show-versions": { type: "boolean", description: "Show VS Code extension versions." },
   "proxy-domain": { type: "string[]", description: "Domain used for proxying ports." },
@@ -172,7 +176,7 @@ export const parse = (
     const arg = argv[i]
 
     // -- signals the end of option parsing.
-    if (!ended && arg == "--") {
+    if (!ended && arg === "--") {
       ended = true
       continue
     }
@@ -220,7 +224,7 @@ export const parse = (
         throw error(`--${key} requires a value`)
       }
 
-      if (option.type == OptionalString && value == "false") {
+      if (option.type === OptionalString && value === "false") {
         continue
       }
 
@@ -353,9 +357,13 @@ export async function readConfigFile(configPath?: string): Promise<Args> {
   }
 
   const configFile = await fs.readFile(configPath)
-  const config = yaml.safeLoad(configFile.toString(), {
+  let config = yaml.safeLoad(configFile.toString(), {
     filename: configPath,
   })
+
+  if (typeof config !== "object") {
+    config = {}
+  }
 
   // We convert the config file into a set of flags.
   // This is a temporary measure until we add a proper CLI library.
